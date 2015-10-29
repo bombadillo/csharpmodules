@@ -11,7 +11,7 @@ public class OracleConnectionHandler : IHandleOracleConnection
 
 
 
-    public DatabaseConnectionHandler(ILog logger)
+    public OracleConnectionHandler(ILog logger)
     {
         Logger = logger;
     }
