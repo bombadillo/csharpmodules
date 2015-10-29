@@ -21,7 +21,7 @@ public class SqlConnectionHandler : IHandleSqlConnection
         {
             try
             {
-                Con = new SqlConnection(ConfigurationManager.AppSettings["DbConnectString"]);
+                Con = new SqlConnection(SqlConnectionString);
                 Logger.Trace("Connected to DB");
             }
             catch (Exception e)
