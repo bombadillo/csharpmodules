@@ -9,8 +9,6 @@ public class OracleConnectionHandler : IHandleOracleConnection
     private OracleConnection Con;
     private readonly string OracleConnectionString = ConfigurationManager.AppSettings["OracleConnection"];
 
-
-
     public OracleConnectionHandler(ILog logger)
     {
         Logger = logger;
