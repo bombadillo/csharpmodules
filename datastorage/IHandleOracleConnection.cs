@@ -1,5 +1,7 @@
 using Oracle.ManagedDataAccess.Client;
-public interface IHandleOracleConnection
+
+public interface IHandleDatabaseConnection
 {
-    OracleConnection GetConnection();
+    void GetConnection();
+    OracleConnection Con { get; }
 }

@@ -49,4 +49,23 @@ public class DatabaseHandler<T> : IHandleDatabase<T>
             return con.Query<T>(sql, queryArguments).FirstOrDefault();
         }
     }
+
+    public bool Insert(string sqlFile, object queryArguments = null, object[] templateArguments = null)
+    {
+        var sql = SqlLoader.LoadFromFile(sqlFile, templateArguments);
+        DatabaseConnectionHandler.GetConnection();
+
+        try
+        {
+          using (var con = DatabaseConnectionHandler.Con)
+          {
+            var result = con.Execute(sql, queryArguments);
+            return result > 0;
+          }
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+    }
 }

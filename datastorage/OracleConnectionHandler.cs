@@ -1,31 +1,44 @@
-using Oracle.ManagedDataAccess.Client;
+using System;
 using Interfaces;
+using Oracle.ManagedDataAccess.Client;
 using System.Configuration;
 
-public class OracleConnectionHandler : IHandleOracleConnection
+public class DatabaseConnectionHandler : IHandleDatabaseConnection
 {
     private readonly ILog Logger;
 
-    private OracleConnection Con;
+    public OracleConnection Con { get; set; }
+
     private readonly string OracleConnectionString = ConfigurationManager.AppSettings["OracleConnection"];
 
-    public OracleConnectionHandler(ILog logger)
+    public DatabaseConnectionHandler(ILog logger)
     {
         Logger = logger;
     }
 
-    public OracleConnection GetConnection()
+    public void GetConnection()
     {
-        if (Con == null)
-        {
-            Con = new OracleConnection
-            {
-                ConnectionString = OracleConnectionString
-            };
 
+        if (Con != null) return;
+
+        Con = new OracleConnection
+        {
+            ConnectionString = OracleConnectionString
+        };
+
+        try
+        {
             Con.Open();
         }
+        catch (Exception)
+        {
+            Logger.Error("Unable to open Oracle connection.");
+        }
+    }
 
-        return Con;
+
+    public void CloseConnection()
+    {
+        Con.Dispose();
     }
 }
