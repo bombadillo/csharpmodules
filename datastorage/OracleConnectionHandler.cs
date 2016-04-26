@@ -38,7 +38,7 @@
             }
             catch (Exception ex)
             {
-                Logger.Error("Unable to open Oracle connection.");
+                Logger.Error("Unable to open Oracle connection." + ex.Message);
             }
         }
 
