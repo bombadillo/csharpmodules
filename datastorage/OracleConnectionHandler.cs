@@ -1,44 +1,50 @@
-using System;
-using Interfaces;
-using Oracle.ManagedDataAccess.Client;
-using System.Configuration;
+    using System.Data;
+    using System;
+    using Interfaces;
+    using Oracle.ManagedDataAccess.Client;
+    using System.Configuration;
 
-public class DatabaseConnectionHandler : IHandleDatabaseConnection
-{
-    private readonly ILog Logger;
-
-    public OracleConnection Con { get; set; }
-
-    private readonly string OracleConnectionString = ConfigurationManager.AppSettings["OracleConnection"];
-
-    public DatabaseConnectionHandler(ILog logger)
+    public class DatabaseConnectionHandler : IHandleDatabaseConnection
     {
-        Logger = logger;
-    }
+        private readonly ILog Logger;
 
-    public void GetConnection()
-    {
+        public OracleConnection Con { get; set; }
 
-        if (Con != null) return;
+        private readonly string OracleConnectionString = ConfigurationManager.AppSettings["OracleConnection"];
 
-        Con = new OracleConnection
+        public DatabaseConnectionHandler(ILog logger)
         {
-            ConnectionString = OracleConnectionString
-        };
-
-        try
-        {
-            Con.Open();
+            Logger = logger;
         }
-        catch (Exception)
+
+        public void GetConnection()
         {
-            Logger.Error("Unable to open Oracle connection.");
+            Con = new OracleConnection
+            {
+                ConnectionString = OracleConnectionString
+            };
+
+            if (Con.State != ConnectionState.Open)
+            {
+                OpenConnection();   
+            }                      
+        }
+
+        private void OpenConnection()
+        {
+            try
+            {
+                Con.Open();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Unable to open Oracle connection.");
+            }
+        }
+
+
+        public void CloseConnection()
+        {
+            Con.Dispose();
         }
     }
-
-
-    public void CloseConnection()
-    {
-        Con.Dispose();
-    }
-}
